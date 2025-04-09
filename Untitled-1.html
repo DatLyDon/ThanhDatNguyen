@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiết kế hộp quà 5 mặt</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --secondary-color: #f9f3f3;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--secondary-color);
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+        .design-panel {
+            flex: 1;
+            min-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .preview-panel {
+            flex: 1;
+            min-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #c0392b;
+        }
+        #net-preview {
+            width: 100%;
+            height: 500px;
+            background-color: #f9f9f9;
+            position: relative;
+            margin: 20px 0;
+            border: 1px dashed #ccc;
+            overflow: hidden;
+        }
+        .box-face {
+            position: absolute;
+            border: 1px solid #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        .face-text {
+            padding: 10px;
+            text-align: center;
+            word-break: break-word;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            font-weight: bold;
+        }
+        #top-face { background-color: #e74c3c; }
+        #front-face { background-color: #3498db; }
+        #back-face { background-color: #2ecc71; }
+        #left-face { background-color: #f39c12; }
+        #right-face { background-color: #9b59b6; }
+        .material-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        .paper { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .fabric { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .wood { background: linear-gradient(135deg, #e6b980 0%, #eacda3 100%); }
+        #box-3d-preview {
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-30deg);
+        }
+        .face-3d {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            opacity: 0.9;
+            border: 2px solid rgba(255,255,255,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            text-shadow: 0 0 5px #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎁 Thiết kế hộp quà 5 mặt</h1>
+    <div class="container">
+        <div class="design-panel">
+            <div class="tab-container">
+                <div class="tab active" data-tab="top">Mặt trên</div>
+                <div class="tab" data-tab="front">Mặt trước</div>
+                <div class="tab" data-tab="back">Mặt sau</div>
+                <div class="tab" data-tab="left">Mặt trái</div>
+                <div class="tab" data-tab="right">Mặt phải</div>
+            </div>
+
+            <div id="top-tab" class="tab-content active">
+                <div class="form-group">
+                    <label for="top-image">Hình ảnh mặt trên</label>
+                    <input type="file" id="top-image" accept="image/*" class="face-image">
+                </div>
+                <div class="form-group">
+                    <label for="top-text">Lời chúc mặt trên</label>
+                    <textarea id="top-text" placeholder="Nhập lời chúc..."></textarea>
+                </div>
+            </div>
+
+            <div id="front-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="front-image">Hình ảnh mặt trước</label>
+                    <input type="file" id="front-image" accept="image/*" class="face-image">
+                </div>
+                <div class="form-group">
+                    <label for="front-text">Lời chúc mặt trước</label>
+                    <textarea id="front-text" placeholder="Nhập lời chúc..."></textarea>
+                </div>
+            </div>
+
+            <div id="back-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="back-image">Hình ảnh mặt sau</label>
+                    <input type="file" id="back-image" accept="image/*" class="face-image">
+                </div>
+                <div class="form-group">
+                    <label for="back-text">Lời chúc mặt sau</label>
+                    <textarea id="back-text" placeholder="Nhập lời chúc..."></textarea>
+                </div>
+            </div>
+
+            <div id="left-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="left-image">Hình ảnh mặt trái</label>
+                    <input type="file" id="left-image" accept="image/*" class="face-image">
+                </div>
+                <div class="form-group">
+                    <label for="left-text">Lời chúc mặt trái</label>
+                    <textarea id="left-text" placeholder="Nhập lời chúc..."></textarea>
+                </div>
+            </div>
+
+            <div id="right-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="right-image">Hình ảnh mặt phải</label>
+                    <input type="file" id="right-image" accept="image/*" class="face-image">
+                </div>
+                <div class="form-group">
+                    <label for="right-text">Lời chúc mặt phải</label>
+                    <textarea id="right-text" placeholder="Nhập lời chúc..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="box-material">Chất liệu hộp</label>
+                <select id="box-material">
+                    <option value="paper"><span class="material-icon paper"></span> Giấy</option>
+                    <option value="fabric"><span class="material-icon fabric"></span> Vải</option>
+                    <option value="wood"><span class="material-icon wood"></span> Gỗ</option>
+                </select>
+            </div>
+
+            <button id="update-btn">Cập nhật thiết kế</button>
+        </div>
+
+        <div class="preview-panel">
+            <h2>✂️ Mặt phẳng hộp quà</h2>
+            <div id="net-preview">
+                <div id="top-face" class="box-face"><div class="face-text"></div></div>
+                <div id="front-face" class="box-face"><div class="face-text"></div></div>
+                <div id="back-face" class="box-face"><div class="face-text"></div></div>
+                <div id="left-face" class="box-face"><div class="face-text"></div></div>
+                <div id="right-face" class="box-face"><div class="face-text"></div></div>
+            </div>
+
+            <h2>🎁 Xem trước 3D</h2>
+            <div id="box-3d-preview">
+                <div class="face-3d" id="top-3d" style="transform: rotateX(90deg) translateZ(100px)">Mặt trên</div>
+                <div class="face-3d" id="front-3d" style="transform: translateZ(100px)">Mặt trước</div>
+                <div class="face-3d" id="back-3d" style="transform: rotateY(180deg) translateZ(100px)">Mặt sau</div>
+                <div class="face-3d" id="left-3d" style="transform: rotateY(-90deg) translateZ(100px)">Mặt trái</div>
+                <div class="face-3d" id="right-3d" style="transform: rotateY(90deg) translateZ(100px)">Mặt phải</div>
+            </div>
+
+            <button id="save-btn">💾 Lưu thiết kế</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${this.dataset.tab}-tab`).classList.add('active');
+                });
+            });
+
+            // Image upload handlers
+            document.querySelectorAll('.face-image').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const faceId = this.id.split('-')[0];
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            const face = document.getElementById(`${faceId}-face`);
+                            face.style.backgroundImage = `url('${event.target.result}')`;
+                            
+                            // Update 3D preview
+                            const face3d = document.getElementById(`${faceId}-3d`);
+                            face3d.style.backgroundImage = `url('${event.target.result}')`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            });
+
+            // Update design
+            document.getElementById('update-btn').addEventListener('click', function() {
+                // Update text for all faces
+                ['top', 'front', 'back', 'left', 'right'].forEach(face => {
+                    const text = document.getElementById(`${face}-text`).value;
+                    document.querySelector(`#${face}-face .face-text`).textContent = text;
+                    document.getElementById(`${face}-3d`).textContent = text || `Mặt ${face}`;
+                });
+
+                // Update material
+                const material = document.getElementById('box-material').value;
+                const materialClasses = ['paper', 'fabric', 'wood'];
+                materialClasses.forEach(cls => {
+                    document.getElementById('net-preview').classList.remove(cls);
+                });
+                document.getElementById('net-preview').classList.add(material);
+            });
+
+            // Save design
+            document.getElementById('save-btn').addEventListener('click', function() {
+                alert('Thiết kế đã được lưu! Bạn có thể in ra hoặc đặt hàng.');
+            });
+
+            // Initialize net layout
+            function initNetLayout() {
+                const net = document.getElementById('net-preview');
+                const netWidth = net.offsetWidth;
+                const netHeight = net.offsetHeight;
+                const faceSize = Math.min(netWidth, netHeight) * 0.4;
+
+                // Position faces in a cross pattern
+                document.getElementById('top-face').style.cssText = `
+                    width: ${faceSize}px;
+                    height: ${faceSize}px;
+                    top: ${netHeight/2 - faceSize/2}px;
+                    left: ${netWidth/2 - faceSize/2}px;
+                `;
+
+                document.getElementById('front-face').style.cssText = `
+                    width: ${faceSize}px;
+                    height: ${faceSize}px;
+                    top: ${netHeight/2 + faceSize/2 + 10}px;
+                    left: ${netWidth/2 - faceSize/2}px;
+                `;
+
+                document.getElementById('back-face').style.cssText = `
+                    width: ${faceSize}px;
+                    height: ${faceSize}px;
+                    top: ${netHeight/2 - faceSize*1.5 - 10}px;
+                    left: ${netWidth/2 - faceSize/2}px;
+                `;
+
+                document.getElementById('left-face').style.cssText = `
+                    width: ${faceSize}px;
+                    height: ${faceSize}px;
+                    top: ${netHeight/2 - faceSize/2}px;
+                    left: ${netWidth/2 - faceSize*1.5 - 10}px;
+                `;
+
+                document.getElementById('right-face').style.cssText = `
+                    width: ${faceSize}px;
+                    height: ${faceSize}px;
+                    top: ${netHeight/2 - faceSize/2}px;
+                    left: ${netWidth/2 + faceSize/2 + 10}px;
+                `;
+            }
+
+            // Initialize
+            initNetLayout();
+            window.addEventListener('resize', initNetLayout);
+        });
+    </script>
+</body>
+</html>
